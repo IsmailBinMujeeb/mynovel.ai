@@ -38,7 +38,7 @@ export const config: ApiRouteConfig = {
 export const handler: Handlers["auth.signup"] = async (req, ctx) => {
   const { email, password } = requestBodySchema.parse(req.body);
   const username = generateUsername();
-  const avatar = `https://api.dicebear.com/7.x/micah/svg?seed=${username}`;
+  const avatar = `https://api.dicebear.com/9.x/dylan/svg?seed=${username}&scale=75`;
 
   await connectDB();
 
