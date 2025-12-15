@@ -12,8 +12,11 @@ declare module 'motia' {
   }
 
   interface Handlers {
-    'ProcessGreeting': EventHandler<{ timestamp: string; appName: string; greetingPrefix: string; requestId: string }, never>
-    'HelloAPI': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { message: string; status: string; appName: string }>, { topic: 'process-greeting'; data: { timestamp: string; appName: string; greetingPrefix: string; requestId: string } }>
+    'auth.signup': ApiRouteHandler<{ email: string; password: string }, ApiResponse<201, { accessToken: string; refreshToken: string }> | ApiResponse<209, { error: string }> | ApiResponse<401, { error: string }> | ApiResponse<409, { error: string }> | ApiResponse<500, { error: string }>, never>
+    'auth.signout': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { success: boolean }> | ApiResponse<401, { error: string }> | ApiResponse<404, { error: string }> | ApiResponse<500, { error: string }>, never>
+    'auth.signin': ApiRouteHandler<{ email: string; password: string }, ApiResponse<200, { accessToken: string; refreshToken: string }> | ApiResponse<401, { error: string }> | ApiResponse<404, { error: string }> | ApiResponse<500, { error: string }>, never>
+    'auth.refresh-token': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { success: boolean }> | ApiResponse<401, { error: string }> | ApiResponse<404, { error: string }> | ApiResponse<500, { error: string }>, never>
+    'auth.me': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { user: { id: string; email: string; username: string; avatar: string; password: string; createdAt: string; updatedAt: string } }> | ApiResponse<401, { error: string }> | ApiResponse<404, { error: string }> | ApiResponse<500, { error: string }>, never>
   }
     
 }
