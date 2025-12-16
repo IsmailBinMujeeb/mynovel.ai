@@ -12,7 +12,7 @@ export interface IForm extends Document {
   fields: IFormField[];
 }
 
-export const FormSchema = new mongoose.Schema(
+export const FormSchema = new mongoose.Schema<IForm>(
   {
     novelId: {
       type: mongoose.Schema.Types.ObjectId,

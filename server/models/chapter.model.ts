@@ -11,7 +11,7 @@ export interface IChapter extends Document {
   contentSummary: string;
 }
 
-const chapterSchema = new mongoose.Schema(
+const chapterSchema = new mongoose.Schema<IChapter>(
   {
     title: { type: String, required: true },
     novelId: {
