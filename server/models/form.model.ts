@@ -10,6 +10,8 @@ export interface IFormField {
 export interface IForm extends Document {
   novelId: mongoose.Schema.Types.ObjectId;
   fields: IFormField[];
+  userId: mongoose.Schema.Types.ObjectId;
+  isAllQuestionsAnswered: boolean;
 }
 
 export const FormSchema = new mongoose.Schema<IForm>(
@@ -20,6 +22,11 @@ export const FormSchema = new mongoose.Schema<IForm>(
       required: true,
       unique: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     fields: [
       {
         label: { type: String, required: true },
@@ -28,6 +35,7 @@ export const FormSchema = new mongoose.Schema<IForm>(
         isAnswered: { type: Boolean, default: false },
       },
     ],
+    isAllQuestionsAnswered: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

@@ -30,6 +30,7 @@ export const handler: Handlers["event.generate.form.questions"] = async (
   const newForm = await Form.create({
     novelId,
     fields: intakeQuestions,
+    userId: novel.userId,
   });
 
   if (!newForm) {
