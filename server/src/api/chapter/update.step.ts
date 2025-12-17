@@ -93,6 +93,8 @@ export const handler: Handlers["api.chapter.update"] = async (req, ctx) => {
       title: body.data.title,
       content: body.data.content,
       chapterNumber: body.data.chapterNumber,
+      wordCount: body.data.content.split(" ").length,
+      readTime: Math.ceil(body.data.content.split(" ").length / 135),
     },
     { new: true },
   );

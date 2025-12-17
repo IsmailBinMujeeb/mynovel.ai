@@ -7,14 +7,19 @@ import mongoose from "mongoose";
 import { auth } from "../../middlewares/auth.middleware";
 
 const bodySchema = z.object({
-  answer: z.string(),
+  fields: z.array(
+    z.object({
+      label: z.string(),
+      level: z.number(),
+      _id: z.string(),
+      answer: z.string(),
+      isAnswered: z.boolean(),
+    }),
+  ),
 });
 
 const responseSchema = {
   200: z.object({
-    level: z.number(),
-    question: z.string(),
-    answer: z.string(),
     success: z.boolean(),
   }),
   400: z.object({
@@ -38,7 +43,7 @@ const responseSchema = {
 export const config: ApiRouteConfig = {
   type: "api",
   name: "api.form.update",
-  path: "/api/form/answer/:formId/:level",
+  path: "/api/form/answer/:formId",
   method: "PUT",
   emits: [],
   flows: [],
@@ -50,7 +55,6 @@ export const config: ApiRouteConfig = {
 // @ts-ignore
 export const handler: Handlers["api.form.update"] = async (req, ctx) => {
   const formId = (req as ApiRequest).pathParams.formId;
-  const level = (req as ApiRequest).pathParams.level;
   const userId = (req as any).user.id;
   const body = bodySchema.safeParse(req.body);
 
@@ -90,13 +94,14 @@ export const handler: Handlers["api.form.update"] = async (req, ctx) => {
     };
   }
 
-  const updatedFields = form.fields.map((field) => {
-    if (field.level !== Number(level)) return field;
+  const updatedFields = form.fields.map((dbField, index) => {
+    const userSendedField = body.data.fields[index];
+    if (dbField.level !== userSendedField.level) return dbField;
 
     return {
-      label: field.label,
-      level,
-      answer: body.data.answer,
+      label: dbField.label,
+      level: dbField.level,
+      answer: userSendedField.answer,
       isAnswered: true,
     };
   });

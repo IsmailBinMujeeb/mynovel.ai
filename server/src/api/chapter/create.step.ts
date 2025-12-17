@@ -108,7 +108,7 @@ export const handler: Handlers["api.novel.create"] = async (req, ctx) => {
     isPrologue: body.data.isPrologue,
     isEpilogue: body.data.isEpilogue,
     wordCount: 2,
-    readTime: Number((2 / 135).toFixed(0)),
+    readTime: Math.ceil(2 / 135),
     userId,
     novelId,
   });

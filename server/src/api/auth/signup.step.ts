@@ -16,7 +16,6 @@ const responseSchema = {
     accessToken: z.string(),
     refreshToken: z.string(),
   }),
-  209: z.object({ error: z.string() }),
   401: z.object({ error: z.string() }),
   409: z.object({ error: z.string() }),
   500: z.object({ error: z.string() }),
@@ -43,7 +42,7 @@ export const handler: Handlers["auth.signup"] = async (req, ctx) => {
   await connectDB();
 
   const isUserExists = await User.exists({ email });
-  if (isUserExists) {
+  if (isUserExists !== null) {
     return {
       status: 409,
       body: { error: "User already exists" },

@@ -2,8 +2,8 @@ import mongoose, { Document } from "mongoose";
 
 export interface IChapter extends Document {
   title: string;
-  novelId: mongoose.ObjectId;
-  userId: mongoose.ObjectId;
+  novelId: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Schema.Types.ObjectId;
   content: string;
   chapterPrompt: string;
   chapterNumber: number;

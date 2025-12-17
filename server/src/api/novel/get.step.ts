@@ -85,12 +85,24 @@ export const handler: Handlers["api.novel.get"] = async (req, ctx) => {
       },
     },
     {
+      $lookup: {
+        from: "forms",
+        localField: "_id",
+        foreignField: "novelId",
+        as: "form",
+      },
+    },
+    {
+      $unwind: "$form",
+    },
+    {
       $project: {
         _id: 1,
         title: 1,
         plot: 1,
         coverPrompt: 1,
         chapters: 1,
+        form: 1,
         success: 1,
       },
     },
@@ -109,10 +121,7 @@ export const handler: Handlers["api.novel.get"] = async (req, ctx) => {
   return {
     status: 200,
     body: {
-      title: novel.title,
-      plot: novel.plot,
-      coverPrompt: novel.coverPrompt,
-      chapters: novel.chapters,
+      novel,
       success: true,
     },
   };

@@ -77,16 +77,6 @@ export const handler: Handlers["api.all.novel.get"] = async (req, ctx) => {
     },
   ]);
 
-  if (!novels.length) {
-    return {
-      status: 404,
-      body: {
-        success: false,
-        error: "Novel not found",
-      },
-    };
-  }
-
   return {
     status: 200,
     body: {
