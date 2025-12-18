@@ -144,7 +144,7 @@ export default function OverviewPage() {
               <div className="bg-muted/50 h-fit rounded-xl">
                 <div className="flex p-4 flex-col items-left justify-center">
                   <h2 className="text-xl font-bold">
-                    {totalWordsInNovel || 0}
+                    {totalWordsInNovel?.toLocaleString() || 0}
                   </h2>
                   <p className="text-zinc-400 text-sm">Total words in novel</p>
                 </div>
@@ -160,7 +160,7 @@ export default function OverviewPage() {
               <div className="bg-muted/50 h-fit rounded-xl">
                 <div className="flex p-4 flex-col items-left justify-center">
                   <h2 className="text-xl font-bold">
-                    {avgWordsPerChapter || 0}
+                    {avgWordsPerChapter?.toLocaleString() || 0}
                   </h2>
                   <p className="text-zinc-400 text-sm">
                     Average words per chapter

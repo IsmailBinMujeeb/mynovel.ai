@@ -129,11 +129,12 @@ export default function ReadNovelPage() {
                         `/novel/read-chapter/${novel._id}/${chapter._id}`,
                       )
                     }
+                    className="cursor-pointer"
                   >
                     <TableCell className="font-medium">
                       {chapter.title}
                     </TableCell>
-                    <TableCell>{chapter.wordCount}</TableCell>
+                    <TableCell>{chapter.wordCount.toLocaleString()}</TableCell>
                     <TableCell>~{chapter.readTime} min</TableCell>
                   </TableRow>
                 ))}

@@ -1,14 +1,16 @@
-import { Handlers, ApiRouteConfig, ApiRequest } from "motia";
+import { Handlers, ApiRouteConfig, ApiRequest, FlowContext } from "motia";
 import { z } from "zod";
 import { connectDB } from "../../../config/db";
 import mongoose from "mongoose";
 import { auth } from "../../middlewares/auth.middleware";
 import { Chapter } from "../../../models/chapter.model";
+import { Emit } from "motia";
 
 const bodySchema = z.object({
   title: z.string().min(2).max(100),
   content: z.string(),
   chapterNumber: z.number(),
+  chapterPrompt: z.string(),
 });
 
 const responseSchema = {
@@ -50,16 +52,19 @@ export const config: ApiRouteConfig = {
   name: "api.chapter.update",
   path: "/api/chapter/:chapterId",
   method: "PUT",
-  emits: [],
-  flows: [],
+  emits: ["summarize.chapter"],
+  flows: ["update.chapter"],
   middleware: [auth({ required: true })],
   bodySchema,
   responseSchema,
 };
 
 // @ts-ignore
-export const handler: Handlers["api.chapter.update"] = async (req, ctx) => {
-  const chapterId = (req as ApiRequest).pathParams.chapterId;
+export const handler: Handlers["api.chapter.update"] = async (
+  req: ApiRequest,
+  ctx: FlowContext<Emit>,
+) => {
+  const chapterId = req.pathParams.chapterId;
   const userId = (req as any).user.id;
   const body = bodySchema.safeParse(req.body);
 
@@ -93,6 +98,7 @@ export const handler: Handlers["api.chapter.update"] = async (req, ctx) => {
       title: body.data.title,
       content: body.data.content,
       chapterNumber: body.data.chapterNumber,
+      chapterPrompt: body.data.chapterPrompt,
       wordCount: body.data.content.split(" ").length,
       readTime: Math.ceil(body.data.content.split(" ").length / 135),
     },
@@ -108,6 +114,13 @@ export const handler: Handlers["api.chapter.update"] = async (req, ctx) => {
       },
     };
   }
+
+  await ctx.emit({
+    topic: "summarize.chapter",
+    data: {
+      chapterId,
+    },
+  });
 
   return {
     status: 200,

@@ -22,17 +22,30 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { useStreamItem } from "@motiadev/stream-client-react";
 
 export default function SettingsPage() {
   const { novelId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPlotEnhancerLoading, setIsPlotEnhancerLoading] = useState(false);
   const [novel, setNovel] = useState<Novel | null>(null);
   const [title, setTitle] = useState<string | null>(null);
   const [plot, setPlot] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const { data: enhancedPlot } = useStreamItem<{
+    plot: string;
+    isCompleted: boolean;
+  }>({
+    groupId: "gid.plot.enhancer.stream",
+    streamName: "plotEenhancerStream",
+    id: novelId,
+  });
 
   useEffect(() => {
     axios
@@ -49,6 +62,18 @@ export default function SettingsPage() {
       .catch((err) => console.error(err))
       .finally(() => setIsLoading(false));
   }, [novelId]);
+
+  useEffect(() => {
+    if (!enhancedPlot) return;
+    setPlot(enhancedPlot.plot);
+
+    if (enhancedPlot.isCompleted) {
+      setIsPlotEnhancerLoading(false);
+      console.log("Plot enhancement complete");
+    }
+
+    console.log(enhancedPlot);
+  }, [enhancedPlot]);
 
   const handleSubmit = async () => {
     if (!title || !plot) {
@@ -76,15 +101,35 @@ export default function SettingsPage() {
       );
 
       console.log(response.data);
+      toast.success("Novel saved successfully");
     } catch (error) {
       console.error(error);
+      toast.error((error as Error).message || "Error during saving novel");
     } finally {
       setIsSaving(false);
     }
   };
 
+  const handlePlotEnhancer = async () => {
+    setIsPlotEnhancerLoading(true);
+    try {
+      await axios.post<{ success: boolean }>(
+        `http://localhost:3000/api/novel/plot-enhancer/${novelId}`,
+        { plot },
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+    } catch (error) {
+      toast.error((error as Error).message || "Error during enhancing plot");
+    }
+  };
+
   return (
     <SidebarProvider>
+      <Toaster position="top-center" />
       <AppSidebar activeId="general-settings" props={{}} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -152,7 +197,22 @@ export default function SettingsPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <h1 className="text-xl font-bold">Novel Plot</h1>
+              <div className="flex justify-between">
+                <h1 className="text-xl font-bold">Novel Plot</h1>
+                {isPlotEnhancerLoading && (
+                  <Button disabled className="w-fit ml-auto">
+                    Sending...
+                  </Button>
+                )}
+                {!isPlotEnhancerLoading && (
+                  <Button
+                    onClick={handlePlotEnhancer}
+                    className="w-fit ml-auto"
+                  >
+                    <Sparkles className="size-6" />
+                  </Button>
+                )}
+              </div>
               <Textarea
                 placeholder="Plot"
                 value={plot || ""}

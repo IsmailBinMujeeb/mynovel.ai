@@ -129,7 +129,9 @@ export default function ReadChapterPage() {
             <div>
               <h1 className="text-2xl font-bold">{chapter?.title}</h1>
             </div>
-            <p className="text-zinc-800 text-sm">{chapter?.content}</p>
+            <pre className="text-zinc-800 text-sm text-wrap">
+              {chapter?.content}
+            </pre>
           </div>
         )}
       </SidebarInset>

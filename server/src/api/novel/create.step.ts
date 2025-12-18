@@ -54,7 +54,7 @@ export const handler: Handlers["api.novel.create"] = async (req, ctx) => {
     userId,
   });
 
-  ctx.emit({
+  await ctx.emit({
     topic: "generate.form.questions",
     data: {
       novelId: newNovel._id,

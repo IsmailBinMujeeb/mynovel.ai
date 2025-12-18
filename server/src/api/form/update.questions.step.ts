@@ -1,4 +1,4 @@
-import { Handlers, ApiRouteConfig, ApiRequest } from "motia";
+import { Handlers, ApiRouteConfig } from "motia";
 import { z } from "zod";
 import { connectDB } from "../../../config/db";
 import { Novel, INovel } from "../../../models/novel.model";
@@ -45,8 +45,8 @@ export const config: ApiRouteConfig = {
   name: "api.form.update",
   path: "/api/form/answer/:formId",
   method: "PUT",
-  emits: [],
-  flows: [],
+  emits: ["summarize.context"],
+  flows: ["update.context"],
   middleware: [auth({ required: true })],
   bodySchema,
   responseSchema,
@@ -54,7 +54,7 @@ export const config: ApiRouteConfig = {
 
 // @ts-ignore
 export const handler: Handlers["api.form.update"] = async (req, ctx) => {
-  const formId = (req as ApiRequest).pathParams.formId;
+  const formId = req.pathParams.formId;
   const userId = (req as any).user.id;
   const body = bodySchema.safeParse(req.body);
 
@@ -115,6 +115,15 @@ export const handler: Handlers["api.form.update"] = async (req, ctx) => {
     { fields: updatedFields, isAllQuestionsAnswered },
     { new: true },
   );
+
+  if (isAllQuestionsAnswered) {
+    await ctx.emit({
+      topic: "summarize.context",
+      data: {
+        formId: updatedForm?._id,
+      },
+    });
+  }
 
   return {
     status: 200,

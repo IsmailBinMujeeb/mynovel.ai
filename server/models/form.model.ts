@@ -12,6 +12,7 @@ export interface IForm extends Document {
   fields: IFormField[];
   userId: mongoose.Schema.Types.ObjectId;
   isAllQuestionsAnswered: boolean;
+  summary: string | null;
 }
 
 export const FormSchema = new mongoose.Schema<IForm>(
@@ -36,6 +37,7 @@ export const FormSchema = new mongoose.Schema<IForm>(
       },
     ],
     isAllQuestionsAnswered: { type: Boolean, default: false },
+    summary: { type: String, default: null },
   },
   { timestamps: true },
 );

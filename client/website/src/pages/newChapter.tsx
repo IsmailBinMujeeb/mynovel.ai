@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import type { Chapter } from "types/chapter";
 
 export default function NewChapterPage() {
   const { novelId } = useParams();
@@ -43,9 +44,7 @@ export default function NewChapterPage() {
     setIsSaving(true);
     try {
       const response = await axios.post<{
-        title: string;
-        plot: string;
-        _id: string;
+        chapter: Chapter;
       }>(
         `http://localhost:3000/api/chapter/${novelId}`,
         {
@@ -65,7 +64,7 @@ export default function NewChapterPage() {
       console.log(response.data);
 
       toast.success("Chapter created successfully");
-      navigate(`/novel/read/${novelId}`);
+      navigate(`/novel/edit-chapter/${novelId}/${response.data.chapter._id}`);
     } catch (error) {
       console.error(error);
       toast.error((error as Error).message || "Failed to create chapter");
@@ -133,7 +132,7 @@ export default function NewChapterPage() {
             <h1 className="text-xl font-bold">Chapter Number</h1>
             <Input
               placeholder="Number"
-              value={chapterNumber || "1"}
+              value={chapterNumber || "0"}
               required
               type="number"
               min={1}
