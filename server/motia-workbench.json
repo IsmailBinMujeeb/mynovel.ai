@@ -25,5 +25,18 @@
         "y": -43
       }
     }
+  },
+  {
+    "id": "api.auth.register",
+    "config": {
+      "src\\event\\event.create.credits.for.new.user.step.ts": {
+        "x": 601,
+        "y": 127
+      },
+      "src\\api\\auth\\signup.step.ts": {
+        "x": -283,
+        "y": -57
+      }
+    }
   }
 ]

@@ -12,6 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import type { AuthTokens } from "types/auth.d";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -32,12 +34,18 @@ export function LoginForm({
         },
       );
 
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
 
-      console.log("Signup successful", response);
+      console.log("Login successful", response);
+      toast.success("Login successful");
+      window.location.href = "/home";
     } catch (error) {
       console.error(error);
+      toast.error("Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -45,6 +53,7 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Toaster position="top-center" />
       <form>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">

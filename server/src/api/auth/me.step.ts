@@ -11,7 +11,6 @@ const responseSchema = {
       email: z.email(),
       username: z.string(),
       avatar: z.url(),
-      password: z.string().min(8).max(100),
       createdAt: z.iso.datetime(),
       updatedAt: z.iso.datetime(),
     }),

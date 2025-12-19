@@ -12,7 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import type { AuthTokens } from "types/auth.d";
-// import { useAuth } from "@/context/auth.context";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export function SignupForm({
   className,
@@ -20,7 +21,6 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
-  // const { setTokens } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -38,8 +38,11 @@ export function SignupForm({
       localStorage.setItem("refreshToken", response.data.refreshToken);
 
       console.log("Signup successful", response);
+      toast.success("Signup successful");
+      window.location.href = "/home";
     } catch (error) {
       console.error(error);
+      toast.error("Signup failed, try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -47,6 +50,7 @@ export function SignupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Toaster position="top-center" />
       <form>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
