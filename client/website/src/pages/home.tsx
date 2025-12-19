@@ -18,11 +18,14 @@ export default function HomePage() {
 
   useEffect(() => {
     axios
-      .get<{ novels: Novel[] }>(`http://localhost:3000/api/novel`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novels: Novel[] }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setNovels(res.data.novels);
       })

@@ -8,16 +8,19 @@ import { EventHandler, ApiRouteHandler, ApiResponse, MotiaStream, CronHandler } 
 
 declare module 'motia' {
   interface FlowContextStateStreams {
-    'writeChapterStream': MotiaStream<{ chapterId: string; prompt: string; title: string; content: string }>
-    'plotEenhancerStream': MotiaStream<{ novelId: string; plot: string }>
+    'writeChapterStream': MotiaStream<{ isCompleted: boolean; content: string }>
+    'reduceCreditsPlotEnhancerStream': MotiaStream<{ creditsId: string; credits: number }>
+    'plotEenhancerStream': MotiaStream<{ plot: string; isCompleted: boolean; message?: string }>
   }
 
   interface Handlers {
     'event.generate.form.questions': EventHandler<never, never>
-    'event.write.chapter': EventHandler<never, never>
+    'event.write.chapter': EventHandler<never, { topic: 'reduce.credits.write.chapter'; data: never }>
     'event.summarize.context': EventHandler<never, never>
     'event.summarize.chapter': EventHandler<never, never>
-    'event.plot.enhancer': EventHandler<never, never>
+    'event.reduce.credits.write.chapter': EventHandler<never, never>
+    'event.reduce.credits.plot.enhancer': EventHandler<never, never>
+    'event.plot.enhancer': EventHandler<never, { topic: 'reduce.credits.plot.enhancer'; data: never }>
     'event.create.credits.for.new.user.step': EventHandler<never, never>
     'cron.daily.credits': CronHandler<never>
     'api.novel.update': ApiRouteHandler<{ title: string; plot: string }, ApiResponse<200, { title: string; plot: string; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, never>
@@ -28,6 +31,7 @@ declare module 'motia' {
     'api.novel.create': ApiRouteHandler<{ title: string; plot: string }, ApiResponse<200, { title: string; plot: string; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, { topic: 'generate.form.questions'; data: never }>
     'api.form.update': ApiRouteHandler<{ fields: Array<{ label: string; level: number; _id: string; answer: string; isAnswered: boolean }> }, ApiResponse<200, { success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<404, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, { topic: 'summarize.context'; data: never }>
     'api.form.get': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { level: number; question: string; answer: string; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<404, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, never>
+    'api.credits.update': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { credits: number; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, never>
     'api.novel.write.chapter': ApiRouteHandler<{ content: string; prompt: string; title: string }, ApiResponse<200, { success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, { topic: 'write.chapter'; data: never }>
     'api.chapter.update': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { title: string; plot: string; coverPrompt: string; chapters: Array<{ _id: string; title: string; content: string; novelId: string; chapterPrompt: string; chapterNumber: number; isPrologue: boolean; isEpilogue: boolean; contentSummary: string }>; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, never>
     'api.chapter.get': ApiRouteHandler<Record<string, unknown>, ApiResponse<200, { title: string; plot: string; coverPrompt: string; chapters: Array<{ _id: string; title: string; content: string; novelId: string; chapterPrompt: string; chapterNumber: number; isPrologue: boolean; isEpilogue: boolean; contentSummary: string }>; success: boolean }> | ApiResponse<400, { success: boolean; error: string }> | ApiResponse<401, { success: boolean; error: string }> | ApiResponse<500, { success: boolean; error: string }>, never>

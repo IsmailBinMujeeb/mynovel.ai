@@ -2,13 +2,12 @@ import { StreamConfig } from "motia";
 import { z } from "zod";
 
 const schema = z.object({
-  plot: z.string(),
-  isCompleted: z.boolean(),
-  message: z.string().optional(),
+  creditsId: z.string(),
+  credits: z.number(),
 });
 
 export const config: StreamConfig = {
-  name: "plotEenhancerStream",
+  name: "reduceCreditsPlotEnhancerStream",
   baseConfig: { storageType: "default" },
   schema,
 };

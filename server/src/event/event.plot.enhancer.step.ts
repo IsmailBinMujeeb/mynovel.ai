@@ -1,4 +1,4 @@
-import { Handlers, EventConfig } from "@motiadev/core";
+import { Handlers, EventConfig, FlowContext, Emit } from "@motiadev/core";
 import { connectDB } from "../../config/db";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { Form } from "../../models/form.model";
@@ -9,7 +9,7 @@ export const config: EventConfig = {
   type: "event",
   name: "event.plot.enhancer",
   description: "Enhances the plot of a novel",
-  emits: [],
+  emits: ["reduce.credits.plot.enhancer"],
   subscribes: ["plot.enhancer"],
   flows: ["flow.plot.enhancer"],
 };
@@ -17,9 +17,37 @@ export const config: EventConfig = {
 // @ts-ignore
 export const handler: Handlers["event.plot.enhancer"] = async (
   input: any,
-  ctx: any,
+  ctx: FlowContext<Emit>,
 ) => {
-  const { novelId, plot } = input;
+  const { novelId, plot, userId } = input;
+  const credits = await ctx.state.get<{
+    dailyCredits: number;
+    boughtCredits: number;
+  }>("credits", userId);
+
+  if (!credits) {
+    await ctx.streams.plotEenhancerStream.set(
+      "gid.plot.enhancer.stream",
+      novelId,
+      {
+        plot: "",
+        isCompleted: true,
+        message: "Credits not found",
+      },
+    );
+    throw new Error("Credits not found");
+  } else if (credits.dailyCredits < 8 && credits.boughtCredits < 8) {
+    await ctx.streams.plotEenhancerStream.set(
+      "gid.plot.enhancer.stream",
+      novelId,
+      {
+        plot: "",
+        isCompleted: true,
+        message: "You do not enough credits",
+      },
+    );
+    throw new Error("Not enough credits");
+  }
 
   await connectDB();
 
@@ -34,8 +62,8 @@ export const handler: Handlers["event.plot.enhancer"] = async (
   }
 
   const model = new ChatGoogleGenerativeAI({
-    model: "gemma-3-12b-it",
-    temperature: 0.7,
+    model: "gemma-3-27b-it",
+    temperature: 0.3,
     apiKey: env.GEMINI_API_KEY,
   });
 
@@ -66,6 +94,13 @@ export const handler: Handlers["event.plot.enhancer"] = async (
       isCompleted: true,
     },
   );
+
+  await ctx.emit({
+    topic: "reduce.credits.plot.enhancer",
+    data: {
+      userId: form.userId,
+    },
+  });
 };
 
 const SYSTEM_PROMPT = `You are a professional story editor and plot architect. Your task is to enhance, strengthen, and clarify the novel’s plot using the provided story context summary.`;

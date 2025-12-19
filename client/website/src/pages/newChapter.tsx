@@ -46,7 +46,7 @@ export default function NewChapterPage() {
       const response = await axios.post<{
         chapter: Chapter;
       }>(
-        `http://localhost:3000/api/chapter/${novelId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/chapter/${novelId}`,
         {
           title: chapterTitle,
           chapterPrompt,

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/auth.context";
 import ProtectedRoute from "@/components/protectedRoute";
+import IndexPage from "./pages";
 import SignupPage from "./pages/signup";
 import SigninPage from "./pages/signin";
 import HomePage from "./pages/home";
@@ -13,12 +14,14 @@ import ReadNovelPage from "./pages/readNovel";
 import ReadChapterPage from "./pages/readChapter";
 import ChaptersPage from "./pages/chapters";
 import EditChapterPage from "./pages/editChapter";
+import NotFoundPage from "./pages/notFound";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<IndexPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signin" element={<SigninPage />} />
 
@@ -43,6 +46,7 @@ function App() {
               element={<EditChapterPage />}
             />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

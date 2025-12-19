@@ -4,13 +4,11 @@ import { z } from "zod";
 import { connectDB } from "../../../config/db";
 import { Novel, INovel } from "../../../models/novel.model";
 import { auth } from "../../middlewares/auth.middleware";
-
-const bodySchema = z.object({
-  plot: z.string(),
-});
+import { Credit } from "../../../models/credit.model";
 
 const responseSchema = {
   200: z.object({
+    credits: z.number(),
     success: z.boolean(),
   }),
   400: z.object({
@@ -29,82 +27,75 @@ const responseSchema = {
 
 export const config: ApiRouteConfig = {
   type: "api",
-  name: "api.novel.plot.enhancer",
-  path: "/api/novel/plot-enhancer/:novelId",
-  method: "POST",
-  emits: ["plot.enhancer"],
-  flows: ["flow.plot.enhancer"],
+  name: "api.credits.update",
+  path: "/api/credits/:creditId",
+  method: "PUT",
+  emits: [],
+  flows: [],
   middleware: [auth({ required: true })],
-  bodySchema,
   responseSchema,
 };
 
 // @ts-ignore
-export const handler: Handlers["api.novel.plot.enhancer"] = async (
-  req,
-  ctx,
-) => {
-  const novelId = (req as ApiRequest).pathParams.novelId;
-  const body = bodySchema.safeParse(req.body);
+export const handler: Handlers["api.credits.update"] = async (req, ctx) => {
+  const creditId = (req as ApiRequest).pathParams.creditId;
   const userId = (req as any).user.id;
 
-  if (!body.success) {
+  if (!creditId || !mongoose.isObjectIdOrHexString(creditId)) {
     return {
       status: 400,
       body: {
         success: false,
-        error: "Invalid request body",
-      },
-    };
-  }
-
-  if (!novelId || !mongoose.isObjectIdOrHexString(novelId)) {
-    return {
-      status: 400,
-      body: {
-        success: false,
-        error: "Invalid novel ID",
+        error: "Invalid credit ID",
       },
     };
   }
 
   await connectDB();
 
-  const isNovelExists = await Novel.findById(novelId);
-  const { plot } = body.data;
-
-  if (!isNovelExists) {
+  const isCreditExists = await Credit.findById(creditId);
+  if (!isCreditExists) {
     return {
       status: 404,
       body: {
         success: false,
-        error: "Novel not found",
+        error: "Credit not found",
       },
     };
   }
 
-  if (isNovelExists.userId.toString() !== userId) {
+  if (isCreditExists.userId.toString() !== userId) {
     return {
       status: 401,
       body: {
         success: false,
-        error: "User unauthorized to update this novel",
+        error: "User unauthorized to update this credit",
       },
     };
   }
 
-  await ctx.emit({
-    topic: "plot.enhancer",
-    data: {
-      novelId,
-      userId,
-      plot,
+  const newCredit = await Credit.findByIdAndUpdate(
+    creditId,
+    {
+      boughtCredits: isCreditExists.boughtCredits + 20,
     },
-  });
+    { new: true },
+  );
+
+  if (!newCredit) {
+    return {
+      status: 404,
+      body: {
+        success: false,
+        error: "Credit not found",
+      },
+    };
+  }
 
   return {
     status: 200,
     body: {
+      credits: newCredit.boughtCredits + newCredit.dailyCredits,
       success: true,
     },
   };

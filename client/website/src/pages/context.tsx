@@ -32,7 +32,7 @@ export default function SettingsPage() {
   useEffect(() => {
     axios
       .get<{ form: Context }>(
-        `http://localhost:3000/api/form/answer/${novelId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/form/answer/${novelId}`,
         {
           headers: {
             Authorization: `bearer ${localStorage.getItem("accessToken")}`,
@@ -67,7 +67,7 @@ export default function SettingsPage() {
         _id: string;
         success: boolean;
       }>(
-        `http://localhost:3000/api/form/answer/${context._id}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/form/answer/${context._id}`,
         { fields: context.fields },
         {
           headers: {

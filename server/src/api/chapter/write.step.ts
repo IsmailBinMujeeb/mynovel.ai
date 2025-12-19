@@ -101,6 +101,7 @@ export const handler: Handlers["api.novel.write.chapter"] = async (
       prompt: body.data.prompt,
       content: body.data.content,
       title: body.data.title,
+      userId,
     },
   });
 

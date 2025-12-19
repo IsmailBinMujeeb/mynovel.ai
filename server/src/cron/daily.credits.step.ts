@@ -6,7 +6,7 @@ export const config: CronConfig = {
   type: "cron",
   name: "cron.daily.credits",
   description: "Daily credits",
-  cron: "*/5 * * * * *",
+  cron: "0 0 * * *",
   emits: [],
   flows: [],
 };
@@ -14,5 +14,5 @@ export const config: CronConfig = {
 // @ts-ignore
 export const handler: Handlers["cron.daily.credits"] = async (req, ctx) => {
   await connectDB();
-  await Credit.updateMany({}, { $inc: { dailyCredits: 20 } });
+  await Credit.updateMany({}, { $set: { dailyCredits: 20 } });
 };

@@ -21,7 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import type { Chapter } from "types/chapter";
 import type { Novel } from "types/novel";
 import { NavUser } from "@/components/nav-user";
@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { useStreamItem } from "@motiadev/stream-client-react";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function EditChapterPage() {
   const { chapterId, novelId } = useParams();
@@ -51,6 +52,28 @@ export default function EditChapterPage() {
   const [chapterContent, setChapterContent] = useState("");
   const [chapterPrompt, setChapterPrompt] = useState("");
   const { user } = useAuth();
+  const [credits, setCredits] = useState<number>(0);
+  const [isCreditsUpdating, setIsCreditsUpdating] = useState<boolean>(false);
+  const [isCreditsUpdated, setIsCreditsUpdated] = useState<boolean>(false);
+  const { data: updatedCredits } = useStreamItem<{ credits: number }>({
+    groupId: "gid.reduce.credits.plot.enhancer.stream",
+    streamName: "reduceCreditsPlotEnhancerStream",
+    id: user?.credits._id,
+  });
+
+  useEffect(() => {
+    if (user) {
+      setCredits(user.credits.dailyCredits + user.credits.boughtCredits);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (updatedCredits?.credits) {
+      setCredits(updatedCredits.credits);
+      setIsCreditsUpdated(true);
+      setTimeout(() => setIsCreditsUpdated(false), 2000);
+    }
+  }, [updatedCredits]);
 
   const { data: newChapterContent } = useStreamItem<{
     content: string;
@@ -63,11 +86,14 @@ export default function EditChapterPage() {
 
   useEffect(() => {
     axios
-      .get<{ novel: Novel }>(`http://localhost:3000/api/novel/n/${novelId}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novel: Novel }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/n/${novelId}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setNovel(res.data.novel);
         const c = res.data.novel.chapters.find((c) => c._id === chapterId);
@@ -98,7 +124,7 @@ export default function EditChapterPage() {
     setIsSaving(true);
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/chapter/${chapterId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/chapter/${chapterId}`,
         {
           title: chapterTitle,
           content: chapterContent,
@@ -126,7 +152,7 @@ export default function EditChapterPage() {
     setIsWritingChapter(true);
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/novel/write-chapter/${chapterId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/write-chapter/${chapterId}`,
         {
           title: chapterTitle,
           content: chapterContent,
@@ -142,6 +168,35 @@ export default function EditChapterPage() {
     } catch (error) {
       console.error(error);
       toast.error((error as Error).message || "Failed to write chapter");
+    }
+  };
+
+  const handleCredits = async () => {
+    if (!user) return;
+    setIsCreditsUpdating(true);
+    try {
+      const response = await axios.put<{ credits: number; success: boolean }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/credits/${user.credits._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+
+      if (response.data.success) {
+        setCredits(response.data.credits);
+        toast.success("Credits updated successfully");
+      } else {
+        console.error("Failed to update credits");
+        toast.error("Failed to update credits");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update credits");
+    } finally {
+      setIsCreditsUpdating(false);
     }
   };
 
@@ -161,14 +216,46 @@ export default function EditChapterPage() {
                     asChild
                     className={c._id === chapterId ? `bg-accent` : ``}
                   >
-                    <a href={`/novel/read-chapter/${novelId}/${c._id}`}>
+                    <Link to={`/novel/edit-chapter/${novelId}/${c._id}`}>
                       <span>{c.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroup>
+          {user && (
+            <div className="p-2 mt-auto">
+              <div className="flex flex-col w-full p-2 rounded-2xl border">
+                <p className="font-bold text-sm">
+                  <span className={isCreditsUpdated ? "text-red-500" : ""}>
+                    {credits}
+                  </span>{" "}
+                  credits left
+                </p>
+                <p className="text-zinc-500 text-xs">
+                  Resets daily at midnight
+                </p>
+                <Separator className="my-2" />
+                <p className="text-xs">
+                  Just for Motia Backend Reloaded hackathon, We are making all
+                  credits available for free. Just click the button below to get
+                  started.
+                </p>
+                <Button
+                  className="mt-2 cursor-pointer"
+                  onClick={handleCredits}
+                  disabled={isCreditsUpdating}
+                >
+                  {isCreditsUpdating ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    "Get Started"
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />

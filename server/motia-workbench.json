@@ -14,19 +14,6 @@
     }
   },
   {
-    "id": "api.novel.create",
-    "config": {
-      "src\\event\\generate.form.questions.step.ts": {
-        "x": 323,
-        "y": 64
-      },
-      "src\\api\\novel\\create.step.ts": {
-        "x": -126,
-        "y": -43
-      }
-    }
-  },
-  {
     "id": "api.auth.register",
     "config": {
       "src\\event\\event.create.credits.for.new.user.step.ts": {
@@ -36,6 +23,19 @@
       "src\\api\\auth\\signup.step.ts": {
         "x": -283,
         "y": -57
+      }
+    }
+  },
+  {
+    "id": "api.novel.create",
+    "config": {
+      "src\\event\\generate.form.questions.step.ts": {
+        "x": 287,
+        "y": -31
+      },
+      "src\\api\\novel\\create.step.ts": {
+        "x": -126,
+        "y": -43
       }
     }
   }

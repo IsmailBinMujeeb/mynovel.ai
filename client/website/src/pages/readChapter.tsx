@@ -21,7 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import type { Chapter } from "types/chapter";
 import type { Novel } from "types/novel";
 import { NavUser } from "@/components/nav-user";
@@ -43,11 +43,14 @@ export default function ReadChapterPage() {
 
   useEffect(() => {
     axios
-      .get<{ novel: Novel }>(`http://localhost:3000/api/novel/n/${novelId}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novel: Novel }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/n/${novelId}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setNovel(res.data.novel);
         const c = res.data.novel.chapters.find((c) => c._id === chapterId);
@@ -74,9 +77,9 @@ export default function ReadChapterPage() {
                     asChild
                     className={c._id === chapterId ? `bg-accent` : ``}
                   >
-                    <a href={`/novel/read-chapter/${novelId}/${c._id}`}>
+                    <Link to={`/novel/read-chapter/${novelId}/${c._id}`}>
                       <span>{c.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

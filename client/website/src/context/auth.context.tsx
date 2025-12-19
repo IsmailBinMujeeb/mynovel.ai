@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     axios
-      .get<{ user: User }>(`http://localhost:3000/auth/me`, {
+      .get<{ user: User }>(`${import.meta.env.VITE_API_ENDPOINT}/auth/me`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

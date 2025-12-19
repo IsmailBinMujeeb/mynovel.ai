@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "../../middlewares/auth.middleware";
 import { connectDB } from "../../../config/db";
 import User from "../../../models/user.model";
+import mongoose from "mongoose";
 
 const responseSchema = {
   200: z.object({
@@ -38,7 +39,33 @@ export const handler: Handlers["auth.me"] = async (req, ctx) => {
   const userId = req.user?.id;
 
   await connectDB();
-  const user = await User.findById(userId).select("-password -refreshToken");
+  const [user] = await User.aggregate([
+    {
+      $match: { _id: new mongoose.Types.ObjectId(userId) },
+    },
+    {
+      $lookup: {
+        from: "credits",
+        localField: "_id",
+        foreignField: "userId",
+        as: "credits",
+      },
+    },
+    {
+      $unwind: "$credits",
+    },
+    {
+      $project: {
+        _id: 1,
+        email: 1,
+        username: 1,
+        avatar: 1,
+        credits: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
 
   if (!user) {
     return {
@@ -46,6 +73,11 @@ export const handler: Handlers["auth.me"] = async (req, ctx) => {
       body: { error: "User not found" },
     };
   }
+
+  ctx.state.set("credits", user._id.toString(), {
+    dailyCredits: user.credits.dailyCredits,
+    boughtCredits: user.credits.boughtCredits,
+  });
 
   return {
     status: 200,

@@ -41,7 +41,6 @@ export const handler: Handlers["event.summarize.context"] = async (
   const response = await model.invoke(
     `System prompt: ${SYSTEM_PROMPT}. Core objectives: ${CORE_OBJECTIVES} Context: ${form.fields.map((f) => `${f.label}: ${f.answer}`).join(", ")}. Output requirements: ${OUTPUT_REQUIREMENTS}. Rules: ${RULES}. The final output should read like a professional internal creative brief handed from one AI system to another, clear, minimal, and actionable. Produce ONLY the summarized brief in the specified format. No markdown commentary. No preface. No conclusion.`,
   );
-  ctx.logger.info(response.content);
 
   form.summary = response.content as string;
   await form.save();

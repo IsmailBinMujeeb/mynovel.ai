@@ -3,6 +3,13 @@ export interface User {
   email: string;
   username: string;
   avatar: string;
+  credits: Credits;
+}
+
+export interface Credits {
+  _id: string;
+  boughtCredits: number;
+  dailyCredits: number;
 }
 
 export interface AuthTokens {

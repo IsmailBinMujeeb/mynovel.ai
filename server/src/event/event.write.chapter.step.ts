@@ -1,4 +1,4 @@
-import { Handlers, EventConfig } from "@motiadev/core";
+import { Handlers, EventConfig, FlowContext, Emit } from "@motiadev/core";
 import { connectDB } from "../../config/db";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { Form, IForm } from "../../models/form.model";
@@ -11,7 +11,7 @@ export const config: EventConfig = {
   type: "event",
   name: "event.write.chapter",
   description: "Writes a chapter of a novel",
-  emits: [],
+  emits: ["reduce.credits.write.chapter"],
   subscribes: ["write.chapter"],
   flows: ["flow.write.chapter"],
 };
@@ -19,9 +19,38 @@ export const config: EventConfig = {
 // @ts-ignore
 export const handler: Handlers["event.write.chapter"] = async (
   input: any,
-  ctx: any,
+  ctx: FlowContext<Emit>,
 ) => {
-  const { novelId, prompt, title } = input;
+  const { novelId, prompt, title, userId } = input;
+
+  const credits = await ctx.state.get<{
+    dailyCredits: number;
+    boughtCredits: number;
+  }>("credits", userId);
+
+  if (!credits) {
+    await ctx.streams.plotEenhancerStream.set(
+      "gid.plot.enhancer.stream",
+      novelId,
+      {
+        plot: "",
+        isCompleted: true,
+        message: "Credits not found",
+      },
+    );
+    throw new Error("Credits not found");
+  } else if (credits.dailyCredits < 8 && credits.boughtCredits < 8) {
+    await ctx.streams.plotEenhancerStream.set(
+      "gid.plot.enhancer.stream",
+      novelId,
+      {
+        plot: "",
+        isCompleted: true,
+        message: "You do not enough credits",
+      },
+    );
+    throw new Error("Not enough credits");
+  }
 
   await connectDB();
 
@@ -117,6 +146,13 @@ export const handler: Handlers["event.write.chapter"] = async (
       isCompleted: true,
     },
   );
+
+  await ctx.emit({
+    topic: "reduce.credits.write.chapter",
+    data: {
+      userId,
+    },
+  });
 };
 
 const SYSTEM_PROMPT = `You are a professional novelist and scene writer. Your task is to write one complete novel chapter using the provided context while maintaining consistency with the established story, characters, tone, and world.`;

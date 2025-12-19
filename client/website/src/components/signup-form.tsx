@@ -27,7 +27,7 @@ export function SignupForm({
     try {
       setIsLoading(true);
       const response = await axios.post<AuthTokens>(
-        "http://localhost:3000/auth/signup",
+        "${import.meta.env.VITE_API_ENDPOINT}/auth/signup",
         {
           email,
           password,

@@ -39,12 +39,16 @@ export default function ChaptersPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(import.meta.env.VITE_API_ENDPOINT);
     axios
-      .get<{ novel: Novel }>(`http://localhost:3000/api/novel/n/${novelId}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novel: Novel }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/n/${novelId}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setNovel(res.data.novel);
       })

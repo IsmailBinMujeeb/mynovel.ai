@@ -41,6 +41,7 @@ export default function SettingsPage() {
   const { data: enhancedPlot } = useStreamItem<{
     plot: string;
     isCompleted: boolean;
+    message?: string;
   }>({
     groupId: "gid.plot.enhancer.stream",
     streamName: "plotEenhancerStream",
@@ -49,11 +50,14 @@ export default function SettingsPage() {
 
   useEffect(() => {
     axios
-      .get<{ novel: Novel }>(`http://localhost:3000/api/novel/n/${novelId}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novel: Novel }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/n/${novelId}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setTitle(res.data.novel.title);
         setPlot(res.data.novel.plot);
@@ -65,7 +69,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!enhancedPlot) return;
-    setPlot(enhancedPlot.plot);
+
+    if (enhancedPlot.message) {
+      toast.error(enhancedPlot.message);
+    } else {
+      setPlot(enhancedPlot.plot);
+    }
 
     if (enhancedPlot.isCompleted) {
       setIsPlotEnhancerLoading(false);
@@ -91,7 +100,7 @@ export default function SettingsPage() {
         plot: string;
         _id: string;
       }>(
-        `http://localhost:3000/api/novel/${novelId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/${novelId}`,
         { title, plot },
         {
           headers: {
@@ -114,7 +123,7 @@ export default function SettingsPage() {
     setIsPlotEnhancerLoading(true);
     try {
       await axios.post<{ success: boolean }>(
-        `http://localhost:3000/api/novel/plot-enhancer/${novelId}`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/plot-enhancer/${novelId}`,
         { plot },
         {
           headers: {
@@ -201,7 +210,7 @@ export default function SettingsPage() {
                 <h1 className="text-xl font-bold">Novel Plot</h1>
                 {isPlotEnhancerLoading && (
                   <Button disabled className="w-fit ml-auto">
-                    Sending...
+                    Writing...
                   </Button>
                 )}
                 {!isPlotEnhancerLoading && (

@@ -41,11 +41,14 @@ export default function OverviewPage() {
 
   useEffect(() => {
     axios
-      .get<{ novel: Novel }>(`http://localhost:3000/api/novel/n/${novelId}`, {
-        headers: {
-          Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      .get<{ novel: Novel }>(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel/n/${novelId}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      })
+      )
       .then((res) => {
         setNovel(res.data.novel);
         const chapters = res.data.novel.chapters;
@@ -144,7 +147,7 @@ export default function OverviewPage() {
               <div className="bg-muted/50 h-fit rounded-xl">
                 <div className="flex p-4 flex-col items-left justify-center">
                   <h2 className="text-xl font-bold">
-                    {totalWordsInNovel?.toLocaleString() || 0}
+                    {totalWordsInNovel ? totalWordsInNovel.toLocaleString() : 0}
                   </h2>
                   <p className="text-zinc-400 text-sm">Total words in novel</p>
                 </div>
@@ -160,7 +163,9 @@ export default function OverviewPage() {
               <div className="bg-muted/50 h-fit rounded-xl">
                 <div className="flex p-4 flex-col items-left justify-center">
                   <h2 className="text-xl font-bold">
-                    {avgWordsPerChapter?.toLocaleString() || 0}
+                    {avgWordsPerChapter
+                      ? avgWordsPerChapter.toLocaleString()
+                      : 0}
                   </h2>
                   <p className="text-zinc-400 text-sm">
                     Average words per chapter
