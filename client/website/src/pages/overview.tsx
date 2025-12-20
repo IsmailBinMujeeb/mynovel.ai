@@ -164,7 +164,7 @@ export default function OverviewPage() {
                 <div className="flex p-4 flex-col items-left justify-center">
                   <h2 className="text-xl font-bold">
                     {avgWordsPerChapter
-                      ? avgWordsPerChapter.toLocaleString()
+                      ? Number(avgWordsPerChapter.toFixed()).toLocaleString()
                       : 0}
                   </h2>
                   <p className="text-zinc-400 text-sm">

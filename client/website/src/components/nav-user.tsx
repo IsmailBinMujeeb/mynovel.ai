@@ -16,12 +16,37 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import type { User } from "types/auth.d";
+import axios from "axios";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
 
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/auth/signout`,
+        {},
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      toast.success("Logged out successfully, redirecting...");
+      window.location.href = "/signin";
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to logout");
+    }
+  };
+
   return (
     <SidebarMenu>
+      <Toaster position="top-center" />
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -59,7 +84,7 @@ export function NavUser({ user }: { user: User }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

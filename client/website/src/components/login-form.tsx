@@ -27,7 +27,7 @@ export function LoginForm({
     try {
       setIsLoading(true);
       const response = await axios.post<AuthTokens>(
-        "${import.meta.env.VITE_API_ENDPOINT}/auth/signin",
+        `${import.meta.env.VITE_API_ENDPOINT}/auth/signin`,
         {
           email,
           password,

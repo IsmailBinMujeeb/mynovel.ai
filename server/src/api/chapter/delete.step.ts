@@ -41,7 +41,7 @@ const responseSchema = {
 
 export const config: ApiRouteConfig = {
   type: "api",
-  name: "api.chapter.update",
+  name: "api.chapter.delete",
   path: "/api/chapter/:chapterId",
   method: "DELETE",
   emits: [],

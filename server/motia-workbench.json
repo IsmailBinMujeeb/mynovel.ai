@@ -30,12 +30,12 @@
     "id": "api.novel.create",
     "config": {
       "src\\event\\generate.form.questions.step.ts": {
-        "x": 287,
-        "y": -31
+        "x": 410,
+        "y": -210
       },
       "src\\api\\novel\\create.step.ts": {
-        "x": -126,
-        "y": -43
+        "x": 56,
+        "y": -347
       }
     }
   }
