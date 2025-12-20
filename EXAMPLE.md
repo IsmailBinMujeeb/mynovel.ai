@@ -70,76 +70,124 @@ Click on `continue` button, and you will be at `/novel/context/:novelId`.
 Now we have 24 questions for the context of AI to write novel, answer them all like this:
 
 1. What genre(s) do you want? (e.g., romance, fantasy, thriller, sci-fi)
-- Horror, Thriller
+- ```txt
+  Horror, Thriller
+  ```
 
 2. Any books, authors, or movies you want it to feel like?
-- I want the feeling of Conjuring movies
+- ```txt
+  I want the feeling of Conjuring movies
+  ```
 
 3. Do you want it fast-paced or slow and detailed?
-- I want it to be slow paced
+- ```txt 
+  I want it to be slow paced
+  ```
 
 4. Serious, dark, humorous, or light-hearted?
-- Serious and dark
+- ```txt 
+  Serious and dark
+  ```
 
 5. First-person or third-person narration?
-- The novel should be first person narrated
+- ```txt 
+  The novel should be first person narrated
+  ```
 
 6. What is the main conflict or problem?
-- A girls birthday on 13 April from age of 13 start showing her nightmares, does nightmares are not coincidence someone is trying to harm humanity  
+- ```txt
+  A girls birthday on 13 April from age of 13 start showing her nightmares, does nightmares are not coincidence someone is trying to harm humanity
+  ```
 
 7. What themes matter to you? (love, revenge, identity, freedom, etc.)
-- Love and freedom from this nightmares should be centric themes
+- ```txt 
+  Love and freedom from this nightmares should be centric themes
+  ```
 
 8. Do you want a happy ending, tragic ending, or open ending?
-- I want happy ending
+- ```txt 
+  I want a happy ending
+  ```
 
 9. Who is the protagonist?
-- Anya
+- ```txt 
+  Anya
+  ```
 
 10. Age, gender, personality, strengths, flaws?
-- 13 years old, Anya a female protagonist you can make it more better 
+- ```txt 
+  13 years old, Anya a female protagonist you can make it more better
+  ```
 
 11. Who is the antagonist (villain, rival, or opposing force)?
-- I don't have yet, you can create on the go
+- ```txt 
+  I don't have yet, you can create on the go
+  ```
 
 12. Any must-have side characters?
-- You can add or create side characters
+- ```txt 
+  You can add or create side characters
+  ```
 
 13. Where does the story take place? (city, country, fantasy world, future?)
-- Depends on the scenario but most of the story be in city but can be changed if needed
+- ```txt 
+  Depends on the scenario but most of the story be in city but can be changed if needed
+  ```
 
 14. When does it take place? (past, present, future)
-- the story take place in present timeline, but some events can be shown also.
+- ```txt 
+  the story take place in present timeline, but some events can be shown also.
+  ```
 
 15. Are there special rules? (magic, technology, social systems)
-- No special rules accept the nightmares
+- ```txt 
+  No special rules accept the nightmares
+  ```
 
 16. Should the world feel realistic or exaggerated?
-- the world feel realistic
+- ```txt 
+  the world feel realistic
+  ```
 
 17. Do you want plot twists? If yes, how shocking?
-- Yes! I want plot twists, and not each chapter but some times plot twisting is fine
+- ```txt 
+  Yes! I want plot twists, and not each chapter but some times plot twisting is fine
+  ```
 
 18. How much violence is okay?
-- Too much is okay when needed because it is a horror story
+- ```txt 
+  Too much is okay when needed because it is a horror story
+  ```
 
 19. Is romance included? How explicit?
-- Yeah, Romance between Anya and his boyfriend is okay but not too much
+- ```txt 
+  Yeah, Romance between Anya and his boyfriend is okay but not too much
+  ```
 
 20. Is strong language okay?
-- Don't use too hard words so user leave the story instead use easy and normal words
+- ```txt 
+  Don't use too hard words so user leave the story instead use easy and normal words
+  ```
 
 21. Approximate word count for a single chapter? (e.g., 2k, 3k, 5k)
-- A single chapter must have the chapter words count of 2,500 words.
+- ```txt 
+  A single chapter must have the chapter words count of 2,500 words.
+  ```
 
 22. Can I change ideas if something doesn’t work?
-- Yes!
+- ```txt 
+  Yes!
+  ```
 
 23. What emotion do you want readers to feel at the end?
-- The reader should feel broken on the whole story but happy when everything ends
+- ```txt 
+  The reader should feel broken on the whole story but happy when everything ends
+  ```
 
 24. If you could describe the book in one sentence, what would it be?
-- A story where each character is included so he/she can die later
+- ```txt 
+  A story where each character is included so he/she can die later
+  ```
 
 Now click on `save`.
 
