@@ -24,7 +24,7 @@ export default function NewNovelPage() {
         plot: string;
         _id: string;
       }>(
-        "${import.meta.env.VITE_API_ENDPOINT}/api/novel",
+        `${import.meta.env.VITE_API_ENDPOINT}/api/novel`,
         { title, plot },
         {
           headers: {

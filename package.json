@@ -1,0 +1,21 @@
+{
+  "name": "mynovel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:website": "cd client/website && pnpm install",
+    "install:server": "cd server && pnpm install",
+    "dev:website": "cd client/website && pnpm run dev",
+    "dev:server": "cd server && pnpm run dev",
+    "install": "concurrently \"pnpm run install:website\" \"pnpm run install:server\"",
+    "dev": "concurrently \"pnpm run dev:website\" \"pnpm run dev:server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.14.0",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
