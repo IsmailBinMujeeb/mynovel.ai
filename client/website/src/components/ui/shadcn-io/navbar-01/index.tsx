@@ -216,9 +216,8 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
                 variant="ghost"
                 size="sm"
                 className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onSignInClick) onSignInClick();
+                onClick={() => {
+                  navigate("/signin");
                 }}
               >
                 {signInText}
