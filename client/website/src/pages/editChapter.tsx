@@ -40,6 +40,10 @@ import { useStreamItem } from "@motiadev/stream-client-react";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useNavigate } from "react-router-dom";
+
+import { AlertCircleIcon } from "lucide-react";
 
 export default function EditChapterPage() {
   const { chapterId, novelId } = useParams();
@@ -55,6 +59,7 @@ export default function EditChapterPage() {
   const [credits, setCredits] = useState<number>(0);
   const [isCreditsUpdating, setIsCreditsUpdating] = useState<boolean>(false);
   const [isCreditsUpdated, setIsCreditsUpdated] = useState<boolean>(false);
+  const navigate = useNavigate();
   const { data: updatedCredits } = useStreamItem<{ credits: number }>({
     groupId: "gid.reduce.credits.plot.enhancer.stream",
     streamName: "reduceCreditsPlotEnhancerStream",
@@ -201,6 +206,28 @@ export default function EditChapterPage() {
   };
 
   if (!user) return <Navigate to="/signin" />;
+
+  if (novel && !novel.form.isAllQuestionsAnswered) {
+    return (
+      <div className="py-4 px-8">
+        <Alert>
+          <AlertCircleIcon />
+          <AlertTitle>
+            Before you can continue, please answer all questions which helps to
+            improve your novel.
+          </AlertTitle>
+          <AlertDescription>
+            <Button
+              onClick={() => navigate(`/novel/context/${novel._id}`)}
+              className="ml-auto cursor-pointer"
+            >
+              Continue
+            </Button>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
