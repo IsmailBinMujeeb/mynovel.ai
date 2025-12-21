@@ -40,7 +40,7 @@ cd mynovel.ai
 
 ## Install dependencies
 ```
-pnpm run install
+pnpm install
 ```
 
 ## Environment Variables
