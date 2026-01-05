@@ -252,7 +252,7 @@ export default function EditChapterPage() {
             </SidebarMenu>
           </SidebarGroup>
           {user && (
-            <div className="p-2 mt-auto">
+            <div className="p-2 mt-auto group-data-[collapsible=icon]:hidden">
               <div className="flex flex-col w-full p-2 rounded-2xl border">
                 <p className="font-bold text-sm">
                   <span className={isCreditsUpdated ? "text-red-500" : ""}>
@@ -286,7 +286,7 @@ export default function EditChapterPage() {
           <Button
             variant={"outline"}
             onClick={() => navigate(`/novel/new-chapter/${novelId}`)}
-            className="mx-4 cursor-pointer"
+            className="mx-4 cursor-pointer group-data-[collapsible=icon]:hidden"
           >
             New Chapter
           </Button>

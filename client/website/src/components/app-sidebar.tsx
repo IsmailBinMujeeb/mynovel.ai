@@ -145,7 +145,7 @@ export function AppSidebar({
       <SidebarContent>
         <NavProjects projects={data.projects} activeId={activeId} />
         {user && (
-          <div className="p-2 mt-auto">
+          <div className="p-2 mt-auto group-data-[collapsible=icon]:hidden">
             <div className="flex flex-col w-full p-2 rounded-2xl border">
               <p className="font-bold text-sm">
                 <span className={isCreditsUpdated ? "text-red-500" : ""}>
