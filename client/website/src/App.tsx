@@ -14,6 +14,9 @@ import ReadNovelPage from "./pages/readNovel";
 import ReadChapterPage from "./pages/readChapter";
 import ChaptersPage from "./pages/chapters";
 import EditChapterPage from "./pages/editChapter";
+import NewCharacterPage from "./pages/newCharacter";
+import CharactersPage from "./pages/characters";
+import EditCharacterPage from "./pages/editCharacter";
 import NotFoundPage from "./pages/notFound";
 
 function App() {
@@ -44,6 +47,18 @@ function App() {
             <Route
               path="/novel/edit-chapter/:novelId/:chapterId"
               element={<EditChapterPage />}
+            />
+            <Route
+              path="/novel/new-character/:novelId"
+              element={<NewCharacterPage />}
+            />
+            <Route
+              path="/novel/characters/:novelId"
+              element={<CharactersPage />}
+            />
+            <Route
+              path="/novel/edit-character/:characterId"
+              element={<EditCharacterPage />}
             />
           </Route>
           <Route path="*" element={<NotFoundPage />} />

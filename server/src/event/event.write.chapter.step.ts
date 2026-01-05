@@ -6,6 +6,7 @@ import env from "../../config/env";
 import { Novel } from "../../models/novel.model";
 import mongoose from "mongoose";
 import { IChapter } from "../../models/chapter.model";
+import { ICharacter } from "models/character.model";
 
 export const config: EventConfig = {
   type: "event",
@@ -70,6 +71,14 @@ export const handler: Handlers["event.write.chapter"] = async (
     },
     {
       $lookup: {
+        from: "characters",
+        localField: "_id",
+        foreignField: "novelId",
+        as: "characters",
+      },
+    },
+    {
+      $lookup: {
         from: "forms",
         localField: "_id",
         foreignField: "novelId",
@@ -91,6 +100,19 @@ export const handler: Handlers["event.write.chapter"] = async (
               _id: "$$chapter._id",
               title: "$$chapter.title",
               contentSummary: "$$chapter.contentSummary",
+            },
+          },
+        },
+        characters: {
+          $map: {
+            input: "$characters",
+            as: "character",
+            in: {
+              _id: "$$character._id",
+              name: "$$character.name",
+              personality: "$$character.personality",
+              role: "$$character.role",
+              age: "$$character.age",
             },
           },
         },
@@ -120,7 +142,7 @@ export const handler: Handlers["event.write.chapter"] = async (
   });
 
   const response = await model.stream(
-    `System prompt: ${SYSTEM_PROMPT}. Inputs: ${INPUTS}. Core objectives: ${CORE_OBJECTIVES}. Novel title ${title}. Novel Briefs: ${form.summary}. User prompt: ${prompt}. Other Chapter's summaries ${chapters.map((chapter) => `${chapter.title}: ${chapter.contentSummary}`).join(", ")}. Output requirements: ${OUTPUT_REQUIREMENTS}. Rules: ${RULES}. Style of writing: ${STYLE_OF_WRITING}.`,
+    `System prompt: ${SYSTEM_PROMPT}. Inputs: ${INPUTS}. Core objectives: ${CORE_OBJECTIVES}. Novel title ${title}. Novel Briefs: ${form.summary}. User prompt: ${prompt}. Other Chapter's summaries ${chapters.map((chapter) => `${chapter.title}: ${chapter.contentSummary}`).join(", ")}. Characters: ${novel.characters.map((character: ICharacter) => `${character.name}: ${character.personality}, ${character.age}, ${character.role}`).join(", ")}. Output requirements: ${OUTPUT_REQUIREMENTS}. Rules: ${RULES}. Style of writing: ${STYLE_OF_WRITING}.`,
   );
   let chunkContent = "";
 

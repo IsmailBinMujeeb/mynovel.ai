@@ -8,6 +8,7 @@ import {
   FolderKanban,
   Settings,
   TableOfContents,
+  UserPlus,
 } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
@@ -50,6 +51,12 @@ const data = {
       url: (novelId: string) => `/novel/chapters/${novelId}`,
       icon: TableOfContents,
       id: "chapters",
+    },
+    {
+      name: "Characters",
+      url: (novelId: string) => `/novel/characters/${novelId}`,
+      icon: UserPlus,
+      id: "characters",
     },
     {
       name: "Read Novel",
