@@ -283,6 +283,13 @@ export default function EditChapterPage() {
               </div>
             </div>
           )}
+          <Button
+            variant={"outline"}
+            onClick={() => navigate(`/novel/new-chapter/${novelId}`)}
+            className="mx-4 cursor-pointer"
+          >
+            New Chapter
+          </Button>
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />
