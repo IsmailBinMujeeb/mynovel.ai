@@ -73,7 +73,7 @@ export default function HomePage() {
               {novels.map((novel) => (
                 <div
                   key={novel._id}
-                  className="rounded-xl border-2 border-zinc-400 p-4 cursor-pointer"
+                  className="rounded-xl shadow shadow-zinc-500 p-4 cursor-pointer"
                   onClick={() => navigate(`/novel/overview/${novel._id}`)}
                 >
                   <h2 className="text-xl font-bold">{novel.title}</h2>
@@ -91,7 +91,7 @@ export default function HomePage() {
                   </div>
                   <Separator />
                   <div className="flex gap-4 text-bold text-zinc-500 mt-2">
-                    <div className="cursor-pointer hover:text-zinc-900">
+                    <div className="cursor-pointer hover:text-zinc-900 dark:hover:text-zinc-100">
                       Edit Novel
                     </div>
                     <div

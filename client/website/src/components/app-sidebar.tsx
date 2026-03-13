@@ -155,9 +155,7 @@ export function AppSidebar({
           <div className="p-2 mt-auto group-data-[collapsible=icon]:hidden">
             <div className="flex flex-col w-full p-2 rounded-2xl border">
               <p className="font-bold text-sm">
-                <span className={isCreditsUpdated ? "text-red-500" : ""}>
-                  {credits}
-                </span>{" "}
+                <span className={isCreditsUpdated ? "" : ""}>{credits}</span>{" "}
                 credits left
               </p>
               <p className="text-zinc-500 text-xs">Resets daily at midnight</p>

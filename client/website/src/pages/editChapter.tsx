@@ -348,13 +348,13 @@ export default function EditChapterPage() {
             )}
             <div>
               <Input
-                className="text-2xl font-bold"
+                className="text-2xl font-bold dark:text-zinc-200"
                 value={chapterTitle}
                 onChange={(e) => setChapterTitle(e.target.value)}
               />
             </div>
             <Textarea
-              className="text-zinc-800 text-sm"
+              className="text-zinc-800 text-sm dark:text-zinc-200"
               value={chapterContent}
               onChange={(e) => setChapterContent(e.target.value)}
             />
@@ -371,7 +371,7 @@ export default function EditChapterPage() {
           <Skeleton className="bg-muted min-h-screen flex-1 rounded-xl md:min-h-min" />
         </div>
       ) : (
-        <div className="flex w-sm flex-col gap-4 p-4 border-l bg-zinc-50">
+        <div className="flex w-sm flex-col gap-4 p-4 border-l bg-zinc-50 dark:bg-zinc-900">
           <h1 className="text-2xl font-bold">Prompt</h1>
           <Textarea
             placeholder="Prompt"

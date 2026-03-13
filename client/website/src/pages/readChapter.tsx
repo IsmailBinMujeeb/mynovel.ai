@@ -132,7 +132,7 @@ export default function ReadChapterPage() {
             <div>
               <h1 className="text-2xl font-bold">{chapter?.title}</h1>
             </div>
-            <pre className="text-zinc-800 text-sm text-wrap">
+            <pre className="text-zinc-800 text-sm text-wrap dark:text-zinc-200">
               {chapter?.content}
             </pre>
           </div>
