@@ -1,6 +1,6 @@
 import mongoose, { Document, Query } from "mongoose";
-import { Chapter } from "./chapter.model";
-import { Form } from "./form.model";
+import { Chapter } from "./chapter.model.ts";
+import { Form } from "./form.model.ts";
 
 export interface INovel extends Document {
   title: string;

@@ -8,7 +8,8 @@
     "start": "motia start",
     "generate-types": "motia generate-types",
     "build": "motia build",
-    "clean": "rm -rf dist node_modules python_modules .motia .mermaid"
+    "clean": "rm -rf dist node_modules python_modules .motia .mermaid",
+    "quar": "quar --db mynovel"
   },
   "keywords": [
     "motia"
@@ -28,6 +29,7 @@
     "langchain": "^1.2.1",
     "mongoose": "^9.0.1",
     "motia": "0.17.6-beta.187",
+    "quar": "^2.0.1",
     "unique-username-generator": "^1.5.1",
     "zod": "4.1.12"
   },
