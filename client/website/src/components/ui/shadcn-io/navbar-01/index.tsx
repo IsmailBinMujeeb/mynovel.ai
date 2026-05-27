@@ -16,6 +16,25 @@ import { useAuth } from "@/context/auth.context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 
+const Logo = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 70 52"
+      className="w-8 h-8 text-black dark:text-white"
+    >
+      <path
+        fill="currentColor"
+        d="m56.6 23.6v-9.9h2.9v7.3h3.1v-10.3h-5.7v-7.9h-3.1v34.6c-5.8 0.8-13.1 2.3-20.7 6.3v-29.8c1.2-1 3.6-2.3 5.7-3.1v-3.2c-2.2 0.8-5.3 2.2-7.1 3.8-3.3-2.9-12.7-7.4-23.6-7.6v6.9h-5.5v35.2h6.5c6.8 0 16.3 0.9 22.5 2.6 6.9-1.5 14.8-2.6 25-2.6h5.9v-16.3h-3v13.6h-3.5c-5 0-10.9 0.2-17.4 0.9 4.5-2.2 11.3-3.7 18-4.2v-13.3h8.5v-3h-8.5zm-51.2 19.6v-29.6h2.7v26.3c5.2 0.5 11.8 1.7 16.5 4-5.5-0.6-11.2-0.7-15.5-0.7h-3.7zm24.9 0.6c-6.1-3.4-13.4-5.5-19.6-6.4v-30.6c5.7 0.2 16 3.2 19.6 7v30z"
+      />
+
+      <rect fill="currentColor" x="47.7" y="2.8" width="2.9" height="27.4" />
+      <rect fill="currentColor" x="41.8" y="5.2" width="2.9" height="31.7" />
+      <rect fill="currentColor" x="35.9" y="20.6" width="3" height="12.8" />
+    </svg>
+  );
+};
+
 // Hamburger icon component
 const HamburgerIcon = ({
   className,
@@ -32,7 +51,7 @@ const HamburgerIcon = ({
     strokeLinecap="round"
     strokeLinejoin="round"
     xmlns="http://www.w3.org/2000/svg"
-    {...(props as any)}
+    {...props}
   >
     <path
       d="M4 12L20 12"
@@ -130,7 +149,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
           "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 px-4 md:px-6 `**:no-underline",
           className,
         )}
-        {...(props as any)}
+        {...props}
       >
         <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between gap-4">
           {/* Left side */}
@@ -174,6 +193,7 @@ export const Navbar01 = React.forwardRef<HTMLElement, Navbar01Props>(
                 onClick={() => navigate("/")}
                 className="flex items-center space-x-2 text-primary hover:text-primary/90 transition-colors cursor-pointer"
               >
+                <Logo />
                 <span className="hidden font-bold text-xl sm:inline-block">
                   MyNovel.ai
                 </span>
